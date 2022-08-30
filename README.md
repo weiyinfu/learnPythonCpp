@@ -14,6 +14,15 @@ Python的C封装不如Java 的JNI好写，原因是Python的垃圾回收机制�
 Python对象引用计数的宏：Py_INCREF(obj)增加对象obj的引用计数，Py_DECREF(obj)减少对象obj的引用计数。Py_INCREF()和Py_DECREF()两个函数也有一个先检查对象是否为空的版本，分别为Py_XINCREF()和Py_XDECREF()。
 编译扩展的程序员必须要注意，代码有可能会被运行在一个多线程的Python环境中。这些线程使用了两个C宏Py_BEGIN_ALLOW_THREADS和Py_END_ALLOW_THREADS，通过将代码和线程隔离，保证了运行和非运行时的安全性，由这些宏包裹的代码将会允许其他线程的运行。
 
+# 查看Cmake编译命令
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+cmake设置编译指令
+set(CMAKE_CXX_FLAGS "-bundle -flat_namespace -undefined suppress")
+
+cmake设置链接指令
+SET_TARGET_PROPERTIES(haha PROPERTIES LINK_FLAGS " -bundle -flat_namespace -undefined suppress")
+
 # 编译命令
 ```plain
 gcc -Wno-unused-result -Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -I/Users/bytedance/anaconda3/include -arch x86_64 -I/Users/bytedance/anaconda3/include -arch x86_64 -I/Users/bytedance/anaconda3/include/python3.7m -c a.cpp -o build/temp.macosx-10.9-x86_64-cpython-37/a.o
@@ -56,11 +65,27 @@ boost封装python不如pybind11。
 # goto的用处
 goto并不是百无一用，例如一个函数在多处有return，又想记录这个函数的返回值。这时候为了避免写两个函数，使用goto是最好的。
 
+# pybind11配置
+pip install pybind11
+
+这样可以得到pybind11-config这个命令。
+pybind11是一个header-only库，所以直接使用`pybind11-config --includes`所确定的头文件即可。  
+
+```
+pybind11-config --includes # 获得g++ include命令
+pybind11-config --cmakedir
+```
+
+# Mac平台制定动态链接库路径
+DYLD_LIBRARY_PATH，在linux上是LD_LIBRARY_PATH
 # 参考资料
-## 官方文档
+## Python.h官方文档
 * https://docs.python.org/zh-cn/3.7/extending/extending.html
 * https://docs.python.org/zh-cn/3/c-api/stable.html 包含了所有的API
 
+## pybind11
+* https://pybind11.readthedocs.io/en/stable/installing.html
+## 其它Python与C交互方式
 * swig代码生成：https://github.com/weiyinfu/learnSwig
 * learnCython:http://github.com/weiyinfu/learnCython
 * learnCtypes:http://github.com/weiyinfu/learnCtypes

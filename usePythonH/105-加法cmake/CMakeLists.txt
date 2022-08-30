@@ -1,0 +1,8 @@
+project(haha)
+cmake_minimum_required(VERSION 3.22)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+include_directories($ENV{HOME}/anaconda3/include/python3.7m)
+link_directories($ENV{HOME}/anaconda3/lib)
+add_library(haha MODULE a.cpp)
+SET_TARGET_PROPERTIES(haha PROPERTIES LINK_FLAGS " -bundle -flat_namespace -undefined suppress")
+target_link_libraries(haha PRIVATE python3.7m)
